@@ -7,7 +7,7 @@ from pathlib import Path
 from typing import Any
 
 class OpenAIImageProvider:
-    def __init__(self, api_key: str | None = None, model: str = "gpt-image-1"):
+    def __init__(self, api_key: str | None = None, model: str = "gpt-image-2.5-flare"):
         try:
             from openai import OpenAI
         except ImportError as exc:
