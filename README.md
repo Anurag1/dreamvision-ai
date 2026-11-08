@@ -22,7 +22,7 @@ python -m unittest discover -s tests -v
 python demo.py
 ```
 
-These tests validate parsing and prompt construction only. They do not generate images or establish comparative model performance.
+These tests validate parsing and prompt construction only. They do not generate images or establish comparative model performance. See [TEST_RESULTS.md](TEST_RESULTS.md) for the recorded offline test run.
 
 ## Run the multimodal benchmark
 
