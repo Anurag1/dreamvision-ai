@@ -45,9 +45,11 @@ def run(dataset, output, image_models, judge_models, repeats=3, size="1024x1024"
           providers[image_model].generate(prompt,image_path,size)
           gen_s=round(time.perf_counter()-t,3)
           opaque=hashlib.sha256(f"{seed}:{key}".encode()).hexdigest()[:12]
+          blind_path=out/"blinded_images"/(opaque+".png")
+          shutil.copyfile(image_path,blind_path)
           blind_rows.append({"blind_image_id":opaque,"image_path":str(image_path),
-             "task_id":task["id"],"repeat":repeat,"image_model":image_model,
-             "condition":condition})
+             "blinded_image_path":str(blind_path),"task_id":task["id"],"repeat":repeat,
+             "image_model":image_model,"condition":condition})
           for judge_model,judge in judges.items():
             t=time.perf_counter()
             score=judge.score(image_path,task)
