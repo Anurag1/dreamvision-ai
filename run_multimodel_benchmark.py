@@ -5,7 +5,7 @@ Every generated image is scored independently by every configured judge.
 Human raters receive a blinded CSV template with randomized opaque image IDs.
 """
 from __future__ import annotations
-import argparse, csv, hashlib, json, os, platform, random, statistics, time
+import argparse, csv, hashlib, json, os, platform, random, statistics, time, shutil
 from datetime import datetime, timezone
 from pathlib import Path
 from dreamvision.engine import analyze_scene
@@ -22,7 +22,7 @@ def run(dataset, output, image_models, judge_models, repeats=3, size="1024x1024"
     if not tasks: raise ValueError("Dataset is empty")
     if len(image_models)<2: raise ValueError("Provide at least two image models for cross-model comparison")
     if len(judge_models)<2: raise ValueError("Provide at least two independent judge models")
-    out=Path(output); (out/"images").mkdir(parents=True,exist_ok=True)
+    out=Path(output); (out/"images").mkdir(parents=True,exist_ok=True); (out/"blinded_images").mkdir(parents=True,exist_ok=True)
     rng=random.Random(seed)
     providers={m:OpenAIImageProvider(model=m) for m in image_models}
     judges={m:OpenAIVisionJudge(model=m) for m in judge_models}
@@ -69,12 +69,12 @@ def run(dataset, output, image_models, judge_models, repeats=3, size="1024x1024"
         "Human ratings are needed for confirmatory conclusions."]}
     (out/"results.json").write_text(json.dumps(report,indent=2),encoding="utf-8")
     with (out/"human_ratings_blinded.csv").open("w",newline="",encoding="utf-8") as f:
-      w=csv.DictWriter(f,fieldnames=["blind_image_id","object_fidelity_1_to_5",
+      w=csv.DictWriter(f,fieldnames=["blind_image_id","blinded_image_path","object_fidelity_1_to_5",
         "relation_fidelity_1_to_5","attribute_fidelity_1_to_5","overall_fidelity_1_to_5",
         "rater_id_optional","notes"])
       w.writeheader()
       for row in sorted(blind_rows,key=lambda x:x["blind_image_id"]):
-       w.writerow({"blind_image_id":row["blind_image_id"]})
+       w.writerow({"blind_image_id":row["blind_image_id"],"blinded_image_path":row["blinded_image_path"]})
     # Key is stored separately; keep it away from blinded rater files.
     (out/"blind_key_restricted.json").write_text(json.dumps(blind_rows,indent=2),encoding="utf-8")
     _write_csv(out/"results.csv",records)
