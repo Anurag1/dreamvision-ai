@@ -106,3 +106,44 @@ python analyze_multimodel_results.py benchmark_runs/multimodel-001/results.json
 For blind human assessment, share only `human_ratings_blinded.csv` and the corresponding files in `blinded_images/`. Keep `blind_key_restricted.json` private until ratings are complete. Never share the key with raters.
 
 The API account must have access to every requested model. Image generation and vision evaluation can incur API charges; obtain the account owner's permission and set usage limits before running a large benchmark. The pilot default of 8 scenes × 3 repeats × 2 image models × 2 conditions produces 96 images, each evaluated by both judges.
+
+
+## Discovery-first experiment: which structures benefit?
+
+The research objective is not to maximize one aggregate benchmark score. It is to identify *where* explicit structure helps, does nothing, or hurts.
+
+The multimodel runner now has four prompt arms:
+- `direct_baseline`: original description unchanged.
+- `objects_only`: extracted entities and explicit object attributes.
+- `relations_only`: extracted spatial relationships.
+- `graph_full`: entities, attributes, relations, and ambiguity warnings.
+
+The pilot scene manifest is annotated with object count, relation count/type, constraint density, compositional depth, ambiguity, and attribute types. These labels are hypotheses for stratification, not validated ground truth.
+
+Run the factor analysis after the main run:
+
+```bash
+python analyze_scene_factors.py benchmark_runs/multimodel-001/results.json
+```
+
+### Questions the experiment is designed to answer
+
+1. Do left/right, above/below, containment, support, and occlusion-like relationships benefit equally?
+2. Does relations-only prompting help more than objects-only prompting when spatial constraints are dense?
+3. Does graph prompting help more as object count and relation count increase?
+4. Are multi-hop compositions harder than pairwise relations?
+5. Does explicit structure help resolve ambiguity, or does a parser turn ambiguity into incorrect certainty?
+6. Which attributes (color, material, count, state, lighting, depth) are preserved better?
+7. Are effects consistent across image models, or model-specific?
+
+### Interpretation guardrails
+
+- Do not infer a factor effect from one or two scenes. Add independently authored scenes per factor level and repeat across seeds.
+- Report all four prompt arms separately. A full-graph gain with no relations-only gain may come from entity/attribute enumeration rather than graph structure.
+- A relations-only gain is more direct evidence that relation encoding helps, but still requires human verification and scene-level replication.
+- Keep prompt length/token budget comparable or add a length-matched control. Otherwise extra words are a confound.
+- Vision-model scores are noisy proxies. Blind human raters should judge images without seeing condition, model, or hypothesis.
+- Report negative effects, parser extraction errors, evaluator disagreement, and per-scene failures.
+- Do not claim causal discovery from descriptive subgroup means. Pre-register hypotheses and use a sufficiently powered, balanced scene set before confirmatory claims.
+
+The current eight-scene manifest is a pilot for checking the pipeline and generating hypotheses. It is not sufficiently large or balanced to establish which visual factors benefit.
