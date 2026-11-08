@@ -1,10 +1,281 @@
 [
- {"id":"garden_bicycle","description":"A small red bicycle stands beside a wooden bench under a broad tree in a quiet garden at sunset, viewed at eye level.","required_objects":["bicycle","bench","tree"],"required_relations":["bicycle beside bench","bench under tree"],"required_attributes":["bicycle is red","bench is wooden","sunset lighting"]},
- {"id":"kitchen_cat","description":"A white cat sits on a blue kitchen chair beside a round wooden table in a bright kitchen.","required_objects":["cat","chair","table"],"required_relations":["cat on chair","chair beside table"],"required_attributes":["cat is white","chair is blue","table is wooden"]},
- {"id":"bridge_river","description":"A stone bridge crosses a narrow river, with two small boats below the bridge and green hills in the background.","required_objects":["bridge","river","boats","hills"],"required_relations":["bridge over river","boats below bridge"],"required_attributes":["bridge is stone","hills are green"]},
- {"id":"robot_desk","description":"A small silver robot stands to the left of an open laptop on a dark wooden desk, photographed from a slightly elevated angle.","required_objects":["robot","laptop","desk"],"required_relations":["robot left of laptop","laptop on desk"],"required_attributes":["robot is silver","desk is dark wood"]},
- {"id":"market_street","description":"A yellow bicycle is parked in front of a fruit stall on a busy street, with red apples and green oranges displayed in baskets.","required_objects":["bicycle","fruit stall","apples","oranges","baskets"],"required_relations":["bicycle in front of stall","fruit displayed in baskets"],"required_attributes":["bicycle is yellow","apples are red","oranges are green"]},
- {"id":"mountain_cabin","description":"A small timber cabin sits beside a snowy pine forest beneath distant mountains at blue hour, with warm light glowing from its windows.","required_objects":["cabin","pine forest","mountains","windows"],"required_relations":["cabin beside forest","mountains in distance"],"required_attributes":["cabin is timber","snow","warm window light"]},
- {"id":"library_ladder","description":"A red rolling ladder leans against a tall bookshelf, with a closed green book on a small table in the foreground.","required_objects":["ladder","bookshelf","book","table"],"required_relations":["ladder against bookshelf","book on table"],"required_attributes":["ladder is red","book is green","book is closed"]},
- {"id":"seaside_lighthouse","description":"A white lighthouse stands on dark coastal rocks to the right of a small fishing boat, with waves behind it under an overcast sky.","required_objects":["lighthouse","rocks","boat","waves"],"required_relations":["lighthouse right of boat","lighthouse on rocks"],"required_attributes":["lighthouse is white","rocks are dark","overcast sky"]}
+  {
+    "id": "garden_bicycle",
+    "description": "A small red bicycle stands beside a wooden bench under a broad tree in a quiet garden at sunset, viewed at eye level.",
+    "required_objects": [
+      "bicycle",
+      "bench",
+      "tree"
+    ],
+    "required_relations": [
+      "bicycle beside bench",
+      "bench under tree"
+    ],
+    "required_attributes": [
+      "bicycle is red",
+      "bench is wooden",
+      "sunset lighting"
+    ],
+    "factors": {
+      "relationship_types": [
+        "beside",
+        "under"
+      ],
+      "relationship_count": 2,
+      "object_count": 3,
+      "constraint_density": "medium",
+      "composition_depth": "two_hop",
+      "ambiguity": "low",
+      "attribute_types": [
+        "color",
+        "material",
+        "lighting"
+      ]
+    }
+  },
+  {
+    "id": "kitchen_cat",
+    "description": "A white cat sits on a blue kitchen chair beside a round wooden table in a bright kitchen.",
+    "required_objects": [
+      "cat",
+      "chair",
+      "table"
+    ],
+    "required_relations": [
+      "cat on chair",
+      "chair beside table"
+    ],
+    "required_attributes": [
+      "cat is white",
+      "chair is blue",
+      "table is wooden"
+    ],
+    "factors": {
+      "relationship_types": [
+        "on",
+        "beside"
+      ],
+      "relationship_count": 2,
+      "object_count": 3,
+      "constraint_density": "medium",
+      "composition_depth": "two_hop",
+      "ambiguity": "low",
+      "attribute_types": [
+        "color",
+        "material"
+      ]
+    }
+  },
+  {
+    "id": "bridge_river",
+    "description": "A stone bridge crosses a narrow river, with two small boats below the bridge and green hills in the background.",
+    "required_objects": [
+      "bridge",
+      "river",
+      "boats",
+      "hills"
+    ],
+    "required_relations": [
+      "bridge over river",
+      "boats below bridge"
+    ],
+    "required_attributes": [
+      "bridge is stone",
+      "hills are green"
+    ],
+    "factors": {
+      "relationship_types": [
+        "crosses",
+        "below"
+      ],
+      "relationship_count": 2,
+      "object_count": 4,
+      "constraint_density": "medium",
+      "composition_depth": "two_hop",
+      "ambiguity": "low",
+      "attribute_types": [
+        "material",
+        "color",
+        "scale"
+      ]
+    }
+  },
+  {
+    "id": "robot_desk",
+    "description": "A small silver robot stands to the left of an open laptop on a dark wooden desk, photographed from a slightly elevated angle.",
+    "required_objects": [
+      "robot",
+      "laptop",
+      "desk"
+    ],
+    "required_relations": [
+      "robot left of laptop",
+      "laptop on desk"
+    ],
+    "required_attributes": [
+      "robot is silver",
+      "desk is dark wood"
+    ],
+    "factors": {
+      "relationship_types": [
+        "left_of",
+        "on"
+      ],
+      "relationship_count": 2,
+      "object_count": 3,
+      "constraint_density": "medium",
+      "composition_depth": "two_hop",
+      "ambiguity": "low",
+      "attribute_types": [
+        "color",
+        "material",
+        "camera"
+      ]
+    }
+  },
+  {
+    "id": "market_street",
+    "description": "A yellow bicycle is parked in front of a fruit stall on a busy street, with red apples and green oranges displayed in baskets.",
+    "required_objects": [
+      "bicycle",
+      "fruit stall",
+      "apples",
+      "oranges",
+      "baskets"
+    ],
+    "required_relations": [
+      "bicycle in front of stall",
+      "fruit displayed in baskets"
+    ],
+    "required_attributes": [
+      "bicycle is yellow",
+      "apples are red",
+      "oranges are green"
+    ],
+    "factors": {
+      "relationship_types": [
+        "in_front_of",
+        "in"
+      ],
+      "relationship_count": 2,
+      "object_count": 5,
+      "constraint_density": "high",
+      "composition_depth": "two_hop",
+      "ambiguity": "medium",
+      "attribute_types": [
+        "color",
+        "count",
+        "container"
+      ]
+    }
+  },
+  {
+    "id": "mountain_cabin",
+    "description": "A small timber cabin sits beside a snowy pine forest beneath distant mountains at blue hour, with warm light glowing from its windows.",
+    "required_objects": [
+      "cabin",
+      "pine forest",
+      "mountains",
+      "windows"
+    ],
+    "required_relations": [
+      "cabin beside forest",
+      "mountains in distance"
+    ],
+    "required_attributes": [
+      "cabin is timber",
+      "snow",
+      "warm window light"
+    ],
+    "factors": {
+      "relationship_types": [
+        "beside",
+        "in_distance"
+      ],
+      "relationship_count": 2,
+      "object_count": 4,
+      "constraint_density": "high",
+      "composition_depth": "two_hop",
+      "ambiguity": "low",
+      "attribute_types": [
+        "material",
+        "weather",
+        "lighting",
+        "depth"
+      ]
+    }
+  },
+  {
+    "id": "library_ladder",
+    "description": "A red rolling ladder leans against a tall bookshelf, with a closed green book on a small table in the foreground.",
+    "required_objects": [
+      "ladder",
+      "bookshelf",
+      "book",
+      "table"
+    ],
+    "required_relations": [
+      "ladder against bookshelf",
+      "book on table"
+    ],
+    "required_attributes": [
+      "ladder is red",
+      "book is green",
+      "book is closed"
+    ],
+    "factors": {
+      "relationship_types": [
+        "against",
+        "on"
+      ],
+      "relationship_count": 2,
+      "object_count": 4,
+      "constraint_density": "high",
+      "composition_depth": "two_hop",
+      "ambiguity": "low",
+      "attribute_types": [
+        "color",
+        "state",
+        "material",
+        "foreground"
+      ]
+    }
+  },
+  {
+    "id": "seaside_lighthouse",
+    "description": "A white lighthouse stands on dark coastal rocks to the right of a small fishing boat, with waves behind it under an overcast sky.",
+    "required_objects": [
+      "lighthouse",
+      "rocks",
+      "boat",
+      "waves"
+    ],
+    "required_relations": [
+      "lighthouse right of boat",
+      "lighthouse on rocks"
+    ],
+    "required_attributes": [
+      "lighthouse is white",
+      "rocks are dark",
+      "overcast sky"
+    ],
+    "factors": {
+      "relationship_types": [
+        "right_of",
+        "on",
+        "behind"
+      ],
+      "relationship_count": 3,
+      "object_count": 4,
+      "constraint_density": "high",
+      "composition_depth": "three_way",
+      "ambiguity": "medium",
+      "attribute_types": [
+        "color",
+        "surface",
+        "weather",
+        "depth"
+      ]
+    }
+  }
 ]
