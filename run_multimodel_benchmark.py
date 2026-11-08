@@ -33,9 +33,15 @@ def run(dataset, output, image_models, judge_models, repeats=3, size="1024x1024"
       for repeat in range(1,repeats+1):
        for task in ordered:
         parsed=analyze_scene(task["description"])
+        full_prompt=structured_prompt(task["description"],parsed)
+        object_lines=[f"- {o['name']}" + (f" ({', '.join(a['type']+'='+a['value'] for a in o['attributes'])})" if o["attributes"] else "") for o in parsed.objects]
+        relation_lines=[f"- {r['subject']} {r['relation']} {r['object']}" for r in parsed.relations]
+        prefix="Create one coherent image faithfully depicting the original scene. Original scene: "+task["description"].strip()+"\\n"
         conditions=[
           ("direct_baseline",task["description"].strip()),
-          ("dreamvision_structured",structured_prompt(task["description"],parsed))
+          ("objects_only",prefix+"Preserve these objects and explicit attributes:\\n"+"\\n".join(object_lines)),
+          ("relations_only",prefix+"Preserve these spatial relationships:\\n"+"\\n".join(relation_lines)),
+          ("graph_full",full_prompt)
         ]
         rng.shuffle(conditions)
         for condition,prompt in conditions:
@@ -49,17 +55,17 @@ def run(dataset, output, image_models, judge_models, repeats=3, size="1024x1024"
           shutil.copyfile(image_path,blind_path)
           blind_rows.append({"blind_image_id":opaque,"image_path":str(image_path),
              "blinded_image_path":str(blind_path),"task_id":task["id"],"repeat":repeat,
-             "image_model":image_model,"condition":condition})
+             "image_model":image_model,"condition":condition,"factors":task.get("factors",{})})
           for judge_model,judge in judges.items():
             t=time.perf_counter()
             score=judge.score(image_path,task)
             eval_s=round(time.perf_counter()-t,3)
             records.append({"task_id":task["id"],"repeat":repeat,"image_model":image_model,
-              "condition":condition,"judge_model":judge_model,"blind_image_id":opaque,
+              "condition":condition,"judge_model":judge_model,"blind_image_id":opaque,"factors":task.get("factors",{}),
               "image_path":str(image_path),"prompt_sha256":hashlib.sha256(prompt.encode()).hexdigest(),
               "generation_seconds":gen_s,"evaluation_seconds":eval_s,"scores":score})
     # Raw records retain the condition for analysis; blinded human sheet does not.
-    report={"protocol":"cross-image-model, paired prompt conditions, multi-judge",
+    report={"protocol":"cross-image-model, four-arm prompt ablation, multi-judge",
       "started_at_utc":started,"finished_at_utc":datetime.now(timezone.utc).isoformat(),
       "environment":{"python":platform.python_version(),"platform":platform.platform()},
       "configuration":{"image_models":image_models,"judge_models":judge_models,"repeats":repeats,
