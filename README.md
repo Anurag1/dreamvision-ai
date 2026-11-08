@@ -10,7 +10,7 @@
 - Two prompt conditions using the same source description:
   - `direct_baseline`: conventional single-pass prompt, passed through unchanged.
   - `dreamvision_structured`: same description augmented with extracted objects, attributes, relations, and ambiguity warnings.
-- Optional OpenAI image generation adapter (`gpt-image-1` by default).
+- Optional OpenAI image generation adapter (`gpt-image-2.5-flare` by default).
 - Optional vision judge (`gpt-4o` by default) that scores object, relation, attribute, and overall fidelity from each generated image.
 - Paired benchmark runner writes raw JSON and CSV, including model IDs, prompt hashes, timing, dataset hash, and environment metadata.
 - Offline unit tests run without API credentials.
@@ -34,7 +34,7 @@ export OPENAI_API_KEY="..."
 python run_benchmark.py \
   --dataset benchmarks/scenes.json \
   --output benchmark_runs/run-001 \
-  --image-model gpt-image-1 \
+  --image-model gpt-image-2.5-flare \
   --judge-model gpt-4o \
   --repeats 3 \
   --seed 17
@@ -80,3 +80,29 @@ EXPERIMENT_PROTOCOL.md
 requirements.txt
 SKILL.md
 ```
+
+
+## Cross-model and independent evaluation
+
+The expanded runner compares at least two image-generation model IDs and evaluates each image with at least two separate vision-judge model IDs. It creates a blinded human-rating CSV and keeps the image/condition key in a separate restricted file.
+
+Use model IDs enabled for your API account. Current documented examples include `gpt-image-2`, `gpt-image-2.5-sunburst`, and `gpt-image-2.5-flare`. See the [official image generation guide](https://developers.openai.com/api/docs/guides/image-generation).
+
+```bash
+python run_multimodel_benchmark.py \
+  --image-models gpt-image-2,gpt-image-2.5-sunburst \
+  --judge-models gpt-4o,gpt-4.1 \
+  --repeats 3 \
+  --seed 17 \
+  --output benchmark_runs/multimodel-001
+```
+
+Analyze each image-model × judge-model pairing separately:
+
+```bash
+python analyze_multimodel_results.py benchmark_runs/multimodel-001/results.json
+```
+
+For blind human assessment, share only `human_ratings_blinded.csv` and the corresponding files in `blinded_images/`. Keep `blind_key_restricted.json` private until ratings are complete. Never share the key with raters.
+
+The API account must have access to every requested model. Image generation and vision evaluation can incur API charges; obtain the account owner's permission and set usage limits before running a large benchmark. The pilot default of 8 scenes × 3 repeats × 2 image models × 2 conditions produces 96 images, each evaluated by both judges.
