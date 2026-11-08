@@ -8,7 +8,7 @@ def main():
     parser = argparse.ArgumentParser(description="Run paired DreamVision vs direct-prompt image benchmark")
     parser.add_argument("--dataset", default="benchmarks/scenes.json")
     parser.add_argument("--output", default="benchmark_runs/latest")
-    parser.add_argument("--image-model", default=os.getenv("DREAMVISION_IMAGE_MODEL", "gpt-image-1"))
+    parser.add_argument("--image-model", default=os.getenv("DREAMVISION_IMAGE_MODEL", "gpt-image-2.5-flare"))
     parser.add_argument("--judge-model", default=os.getenv("DREAMVISION_JUDGE_MODEL", "gpt-4o"))
     parser.add_argument("--repeats", type=int, default=1)
     parser.add_argument("--size", default="1024x1024")
